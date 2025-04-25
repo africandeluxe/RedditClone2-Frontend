@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getMyPosts, updateUsername } from "../services/api";
+import { getMyPosts, updateUsername, deletePost } from "../services/api";
 import { Post } from "../types";
 import PostCard from "../components/PostCard";
 
@@ -31,6 +31,17 @@ const ProfilePage = () => {
     }
   };
 
+  const handleDeletePost = async (postId: string) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+  
+    try {
+      await deletePost(postId);
+      setPosts((prev) => prev.filter((p) => p._id !== postId));
+    } catch (error) {
+      console.error("Failed to delete post", error);
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-accent mb-6">My Profile</h1>
@@ -48,7 +59,8 @@ const ProfilePage = () => {
       <h2 className="text-2xl font-semibold mb-4 text-primary-dark">My Posts</h2>
       <div className="space-y-4">
         {posts.length > 0 ? posts.map((post) => (
-          <PostCard key={post._id} post={post} onVote={() => {}} />
+          <PostCard key={post._id} post={post} onVote={() => {}} currentUserId={user?._id}
+          onDelete={() => handleDeletePost(post._id)} />
         )) : <p>No posts yet.</p>}
       </div>
     </div>
