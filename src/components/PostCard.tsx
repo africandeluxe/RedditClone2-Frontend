@@ -55,8 +55,7 @@ const PostCard = ({ post, onVote, showFullContent = false, currentUserId, onDele
             <FaArrowUp className="h-4 w-4 mr-1" />
             <span>{post.votes}</span>
           </button>
-          <button onClick={() => onVote(-1)} className={`flex items-center text-primary-light hover:text-primary`} aria-label="Downvote" 
-            disabled={!hasVoted}>
+          <button onClick={() => onVote(-1)} className={`flex items-center text-primary-light hover:text-primary`} aria-label="Downvote" >
             <FaArrowDown className="h-4 w-4 mr-1" />
           </button>
         </div>
