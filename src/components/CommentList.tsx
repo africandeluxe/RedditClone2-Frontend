@@ -4,11 +4,12 @@ import { FaTrash, FaArrowUp, FaArrowDown } from "react-icons/fa";
 interface CommentListProps {
   comments: Comment[];
   currentUserId?: string;
+  postAuthorId?: string;
   onDelete: (commentId: string) => void;
   onVote: (commentId: string, vote: 1 | -1) => void;
 }
 
-const CommentList = ({ comments, currentUserId, onDelete, onVote }: CommentListProps) => {
+const CommentList = ({ comments, currentUserId, postAuthorId, onDelete, onVote }: CommentListProps) => {
   const getAuthorDetails = (author: User | string | null | undefined): User => {
     if (!author || typeof author === "string") {
       return { _id: author || "", username: "Unknown", email: "" };
@@ -20,7 +21,7 @@ const CommentList = ({ comments, currentUserId, onDelete, onVote }: CommentListP
     <div className="space-y-4">
       {comments.map((comment) => {
         const author = getAuthorDetails(comment.author);
-        const canDelete = currentUserId === author._id;
+        const canDelete = currentUserId === author._id || currentUserId === postAuthorId;
 
         return (
           <div key={comment._id} className="bg-secondary p-4 rounded-lg shadow-sm">

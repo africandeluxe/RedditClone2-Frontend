@@ -12,6 +12,7 @@ const PostDetailPage = () => {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [voteError, setVoteError] = useState('');
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -39,8 +40,10 @@ const PostDetailPage = () => {
     try {
       const response = await votePost(id!, vote);
       setPost(response.data);
-    } catch (error) {
-      console.error("Failed to vote on post", error);
+      setVoteError("");
+    } catch (error: any) {
+      const msg = error?.response?.data?.message || "Failed to vote on post";
+      setVoteError(msg);
     }
   };
 
@@ -61,8 +64,10 @@ const PostDetailPage = () => {
           )
         };
       });
-    } catch (error) {
-      console.error("Failed to vote on comment", error);
+      setVoteError("");
+    } catch (error:any) {
+      const msg = error?.response?.data?.message || "Failed to vote on comment";
+      setVoteError(msg);
     }
   };
 
@@ -151,6 +156,11 @@ const PostDetailPage = () => {
       <div className="max-w-3xl mx-auto">
         <PostCard post={post} onVote={handlePostVote} showFullContent={true} />
         <div className="mt-8">
+        {voteError && (
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+            {voteError}
+            </div>
+          )}
           <h2 className="text-xl font-bold text-accent mb-4">Comments ({post.comments.length})</h2>
           {isAuthenticated && (
             <div className="mb-8">
@@ -159,7 +169,10 @@ const PostDetailPage = () => {
           )}
 
           {post.comments.length > 0 ? (
-            <CommentList comments={getValidComments(post.comments)} currentUserId={user?._id} onDelete={handleDeleteComment} onVote={handleCommentVote} />
+            <CommentList comments={getValidComments(post.comments)} currentUserId={user?._id} 
+            postAuthorId={
+              typeof post.author !== "string" ? post.author._id : undefined
+            } onDelete={handleDeleteComment} onVote={handleCommentVote} />
           ) : (
             <div className="bg-secondary-dark p-4 rounded text-center">
               <p className="text-primary-dark">No comments yet. Be the first to comment!</p>

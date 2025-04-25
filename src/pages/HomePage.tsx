@@ -9,6 +9,7 @@ import LogoutButton from "../components/LogoutButton";
 const HomePage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [voteError, setVoteError] = useState("");
   const { isAuthenticated } = useAuth();
   const { logout } = useAuth();
 
@@ -35,8 +36,10 @@ const HomePage = () => {
       setPosts(posts.map(post => 
         post._id === postId ? response.data : post
       ));
-    } catch (error) {
-      console.error("Failed to vote", error);
+      setVoteError("");
+    } catch (error: any) {
+      const msg = error?.response?.data?.message || "Failed to vote on post";
+      setVoteError(msg);
     }
   };
 
@@ -48,6 +51,11 @@ const HomePage = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold text-accent mb-8">Recent Posts</h1>
+        {voteError && (
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+            {voteError}
+            </div>
+          )}
         {posts.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-lg text-primary-dark">No posts yet. Be the first to create one!</p>
