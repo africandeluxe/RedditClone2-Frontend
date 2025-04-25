@@ -1,5 +1,6 @@
 import { Comment, User } from "../types";
 import { FaTrash, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { useState } from "react";
 
 interface CommentListProps {
   comments: Comment[];
@@ -10,11 +11,23 @@ interface CommentListProps {
 }
 
 const CommentList = ({ comments, currentUserId, postAuthorId, onDelete, onVote }: CommentListProps) => {
+  const [votingCommentId, setVotingCommentId] = useState<string | null>(null);
+
   const getAuthorDetails = (author: User | string | null | undefined): User => {
     if (!author || typeof author === "string") {
       return { _id: author || "", username: "Unknown", email: "" };
     }
     return author;
+  };
+
+  const handleVote = async (commentId: string, vote: 1 | -1) => {
+    if (votingCommentId) return;
+    setVotingCommentId(commentId);
+    try {
+      await onVote(commentId, vote);
+    } finally {
+      setTimeout(() => setVotingCommentId(null), 500);
+    }
   };
 
   return (
@@ -35,11 +48,13 @@ const CommentList = ({ comments, currentUserId, postAuthorId, onDelete, onVote }
             </div>
             <p className="text-primary-dark whitespace-pre-line">{comment.content}</p>
             <div className="flex items-center mt-2 space-x-2">
-              <button onClick={() => onVote(comment._id, 1)} className="text-primary-light hover:text-primary" aria-label="Upvote">
+              <button onClick={() => handleVote(comment._id, 1)} className="text-primary-light hover:text-primary" aria-label="Upvote"
+                disabled={votingCommentId === comment._id}>
                 <FaArrowUp className="h-4 w-4" />
               </button>
               <span className="text-sm">{comment.votes ?? 0}</span>
-              <button onClick={() => onVote(comment._id, -1)} className="text-primary-light hover:text-primary" aria-label="Downvote">
+              <button onClick={() => handleVote(comment._id, -1)} className="text-primary-light hover:text-primary" aria-label="Downvote"
+                disabled={votingCommentId === comment._id}>
                 <FaArrowDown className="h-4 w-4" />
               </button>
             </div>
