@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Post } from "../types";
-import { getPosts, votePost } from "../services/api";
+import { getPosts, votePost, deletePost } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import PostCard from "../components/PostCard";
 import LogoutButton from "../components/LogoutButton";
@@ -42,6 +42,17 @@ const HomePage = () => {
     }
   };
 
+  const handleDeletePost = async (postId: string) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+  
+    try {
+      await deletePost(postId);
+      setPosts((prev) => prev.filter((p) => p._id !== postId));
+    } catch (error) {
+      console.error("Failed to delete post", error);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
@@ -66,7 +77,7 @@ const HomePage = () => {
           <div className="space-y-6">
             {posts.map(post => (
               <PostCard key={post._id} post={post} onVote={(direction) => handleVote(post._id, direction)}showFullContent={false} 
-              currentUserId={user?._id}/>
+              currentUserId={user?._id} onDelete={() => handleDeletePost(post._id)}/>
             ))}
           </div>
         )}
