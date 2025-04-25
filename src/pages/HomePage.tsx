@@ -75,7 +75,8 @@ const HomePage = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {posts.map(post => (
+            {[...posts].sort((a, b) => b.votes - a.votes) 
+            .map(post => (
               <PostCard key={post._id} post={post} onVote={(direction) => handleVote(post._id, direction)}showFullContent={false} 
               currentUserId={user?._id} onDelete={() => handleDeletePost(post._id)}/>
             ))}
