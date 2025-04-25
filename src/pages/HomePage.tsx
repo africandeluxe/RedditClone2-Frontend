@@ -10,8 +10,7 @@ const HomePage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [voteError, setVoteError] = useState("");
-  const { isAuthenticated } = useAuth();
-  const { logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -66,7 +65,8 @@ const HomePage = () => {
         ) : (
           <div className="space-y-6">
             {posts.map(post => (
-              <PostCard key={post._id} post={post} onVote={(direction) => handleVote(post._id, direction)}showFullContent={false} />
+              <PostCard key={post._id} post={post} onVote={(direction) => handleVote(post._id, direction)}showFullContent={false} 
+              currentUserId={user?._id}/>
             ))}
           </div>
         )}
