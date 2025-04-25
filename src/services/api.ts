@@ -74,4 +74,8 @@ export const updateUsername = (username: string) => {
   return api.put("/auth/update-username", { username });
 };
 
+export const refreshToken = () => {
+  return api.post("/auth/refresh");
+};
+
 export default api;

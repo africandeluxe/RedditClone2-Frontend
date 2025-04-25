@@ -3,6 +3,7 @@ import { getMe } from "../services/api";
 import { User } from "../types";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { refreshToken } from "../services/api";
 
 interface AuthContextType {
   user: User | null;
@@ -28,11 +29,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const response = await getMe();
           setUser(response.data);
         } catch (error) {
-          console.error("Failed to load user", error);
-          localStorage.removeItem("token");
-          setToken(null);
+          console.error("Failed to load user, trying refresh..", error);
+          try {
+            const refreshResponse = await refreshToken();
+            const newToken = refreshResponse.data.token;
+            localStorage.setItem("token", newToken);
+            setToken(newToken);
+            const userResponse = await getMe();
+            setUser(userResponse.data);
+          }catch (refreshError) {
+            console.error("Refresh token failed", refreshError);
+            localStorage.removeItem("token");
+            setToken(null);
+            setUser(null);
         }
       }
+    }
       setLoading(false);
     };
 
