@@ -79,8 +79,13 @@ const PostCard = ({ post, onVote, showFullContent = false, currentUserId, onDele
           <FaComment className="h-4 w-4 mr-1" />
           <span>{post.comments.length} comments</span>
         </div>
-        <div className="text-sm text-accent">Posted by {author.username}</div>
-
+        <div className="flex items-center space-x-2 text-sm text-accent">
+          {author.profilePicture && (
+            <img src={`${process.env.REACT_APP_BACKEND_URL}${author.profilePicture}`} alt="Profile" className="h-6 w-6 rounded-full object-cover"/>
+            )}
+             <span>Posted by {author.username}</span>
+             </div>
+             
         {isAuthor && (
           <div className="flex space-x-2">
             <button onClick={() => navigate(`/edit-post/${post._id}`)} className="text-sm text-blue-600 hover:underline">Edit</button>
