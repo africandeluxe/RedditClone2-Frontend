@@ -50,9 +50,12 @@ const ProfilePage = () => {
     try {
       await uploadProfilePicture(user._id, profilePicture);
       setMessage("Profile picture updated!");
+
       const {data:updatedUser}=await getMe();
+
       setUser(updatedUser);
       setUsername(updatedUser.username);
+      setProfilePicture(null);
     } catch (error) {
       console.error("Failed to upload profile picture", error);
       setMessage("Failed to upload profile picture.");
@@ -67,7 +70,7 @@ const ProfilePage = () => {
         {user?.profilePicture ? (
           <div className="mb-2">
             <img 
-            src={`${process.env.REACT_APP_BACKEND_URL}${user.profilePicture}`} alt="Profile" className="h-32 w-32 rounded-full object-cover"/>
+            src={`${process.env.REACT_APP_BACKEND_URL}${user.profilePicture}?${Date.now()}`} alt="Profile" className="h-32 w-32 rounded-full object-cover"/>
             </div>
             ) : (
             <p className="text-primary-light mb-2">No profile picture uploaded.</p>
