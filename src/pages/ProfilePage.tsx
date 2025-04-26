@@ -6,7 +6,7 @@ import PostCard from "../components/PostCard";
 import { uploadProfilePicture } from "../services/api";
 
 const ProfilePage = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, setUser } = useAuth();
   const [username, setUsername] = useState(user?.username || '');
   const [posts, setPosts] = useState<Post[]>([]);
   const [message, setMessage] = useState('');
@@ -52,7 +52,7 @@ const ProfilePage = () => {
       setMessage("Profile picture updated!");
       console.log("Uploaded file URL:", response.data.profilePicture);
       const updatedUser = await getMe();
-      window.location.reload(); 
+      setUsername(updatedUser.data);
     } catch (error) {
       console.error("Failed to upload profile picture", error);
       setMessage("Failed to upload profile picture.");
