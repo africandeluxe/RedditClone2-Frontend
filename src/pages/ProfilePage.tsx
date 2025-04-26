@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getMyPosts, updateUsername, deletePost } from "../services/api";
+import { getMyPosts, updateUsername, deletePost, getMe } from "../services/api";
 import { Post } from "../types";
 import PostCard from "../components/PostCard";
 import { uploadProfilePicture } from "../services/api";
@@ -51,6 +51,8 @@ const ProfilePage = () => {
       const response = await uploadProfilePicture(user._id, profilePicture);
       setMessage("Profile picture updated!");
       console.log("Uploaded file URL:", response.data.profilePicture);
+      const updatedUser = await getMe();
+      window.location.reload(); 
     } catch (error) {
       console.error("Failed to upload profile picture", error);
       setMessage("Failed to upload profile picture.");
