@@ -81,7 +81,7 @@ const PostCard = ({ post, onVote, showFullContent = false, currentUserId, onDele
         </div>
         <div className="flex items-center space-x-2 text-sm text-accent">
           {author.profilePicture && (
-            <img src={`${process.env.REACT_APP_BACKEND_URL}${author.profilePicture}`} alt="Profile" className="h-6 w-6 rounded-full object-cover"/>
+            <img src={`${process.env.REACT_APP_API_URL?.replace('/api', '')}${author.profilePicture}`} alt="Profile" className="h-6 w-6 rounded-full object-cover"/>
             )}
              <span>Posted by {author.username}</span>
              </div>
