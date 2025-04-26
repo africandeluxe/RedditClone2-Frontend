@@ -39,7 +39,12 @@ const CommentList = ({ comments, currentUserId, postAuthorId, onDelete, onVote }
         return (
           <div key={comment._id} className="bg-secondary p-4 rounded-lg shadow-sm">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-sm font-medium text-accent">{author.username}</span>
+            <div className="flex items-center space-x-2">
+              {author.profilePicture && (
+                <img src={`${process.env.REACT_APP_BACKEND_URL}${author.profilePicture}`} alt="Profile" className="h-5 w-5 rounded-full object-cover"/>
+                )}
+                <span className="text-sm font-medium text-accent">{author.username}</span>
+                </div>
               {canDelete && (
                 <button onClick={() => onDelete(comment._id)} className="text-primary hover:text-primary-dark" aria-label="Delete comment">
                   <FaTrash className="h-4 w-4" />
