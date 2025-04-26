@@ -17,6 +17,7 @@ const HomePage = () => {
       try {
         const response = await getPosts();
         setPosts(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Failed to fetch posts", error);
       } finally {
