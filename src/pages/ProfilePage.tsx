@@ -65,7 +65,7 @@ const ProfilePage = () => {
         {user?.profilePicture ? (
           <div className="mb-2">
             <img 
-            src={`http://localhost:5000${user.profilePicture}`} alt="Profile" className="h-32 w-32 rounded-full object-cover"/>
+            src={`${process.env.REACT_APP_BACKEND_URL}${user.profilePicture}`} alt="Profile" className="h-32 w-32 rounded-full object-cover"/>
             </div>
             ) : (
             <p className="text-primary-light mb-2">No profile picture uploaded.</p>
