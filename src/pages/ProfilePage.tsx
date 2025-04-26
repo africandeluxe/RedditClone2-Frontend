@@ -53,6 +53,7 @@ const ProfilePage = () => {
       console.log("Uploaded file URL:", response.data.profilePicture);
       const updatedUser = await getMe();
       setUsername(updatedUser.data);
+      setUsername(updatedUser.data.username);
     } catch (error) {
       console.error("Failed to upload profile picture", error);
       setMessage("Failed to upload profile picture.");
