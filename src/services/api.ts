@@ -78,4 +78,16 @@ export const refreshToken = () => {
   return api.post("/auth/refresh");
 };
 
+export const uploadProfilePicture = (userId: string, file: File) => {
+  const formData = new FormData();
+  formData.append("profilePicture", file);
+  formData.append("userId", userId);
+
+  return api.post("/upload/profile-picture", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 export default api;

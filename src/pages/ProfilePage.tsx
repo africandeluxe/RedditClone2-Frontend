@@ -3,12 +3,14 @@ import { useAuth } from "../context/AuthContext";
 import { getMyPosts, updateUsername, deletePost } from "../services/api";
 import { Post } from "../types";
 import PostCard from "../components/PostCard";
+import { uploadProfilePicture } from "../services/api";
 
 const ProfilePage = () => {
   const { user, logout } = useAuth();
   const [username, setUsername] = useState(user?.username || '');
   const [posts, setPosts] = useState<Post[]>([]);
   const [message, setMessage] = useState('');
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -42,9 +44,39 @@ const ProfilePage = () => {
     }
   };
 
+  const handleUpload = async () => {
+    if (!profilePicture || !user) return;
+  
+    try {
+      const response = await uploadProfilePicture(user._id, profilePicture);
+      setMessage("Profile picture updated!");
+      console.log("Uploaded file URL:", response.data.profilePicture);
+    } catch (error) {
+      console.error("Failed to upload profile picture", error);
+      setMessage("Failed to upload profile picture.");
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-accent mb-6">My Profile</h1>
+      <div className="mb-6">
+        <label className="block text-sm mb-1 text-primary-dark">Profile Picture</label>
+        {user?.profilePicture ? (
+          <div className="mb-2">
+            <img 
+            src={`http://localhost:5000${user.profilePicture}`} alt="Profile" className="h-32 w-32 rounded-full object-cover"/>
+            </div>
+            ) : (
+            <p className="text-primary-light mb-2">No profile picture uploaded.</p>
+            )}
+            <input type="file" onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setProfilePicture(e.target.files[0]);
+              }
+              }} />
+              <button onClick={handleUpload} className="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Upload Profile Picture</button>
+          </div>
 
       <div className="mb-6">
         <label className="block text-sm mb-1 text-primary-dark">Username</label>
@@ -55,7 +87,6 @@ const ProfilePage = () => {
         </button>
         {message && <p className="mt-2 text-sm text-accent">{message}</p>}
       </div>
-
       <h2 className="text-2xl font-semibold mb-4 text-primary-dark">My Posts</h2>
       <div className="space-y-4">
         {posts.length > 0 ? posts.map((post) => (
