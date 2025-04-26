@@ -48,12 +48,11 @@ const ProfilePage = () => {
     if (!profilePicture || !user) return;
   
     try {
-      const response = await uploadProfilePicture(user._id, profilePicture);
+      await uploadProfilePicture(user._id, profilePicture);
       setMessage("Profile picture updated!");
-      console.log("Uploaded file URL:", response.data.profilePicture);
-      const updatedUser = await getMe();
-      setUsername(updatedUser.data);
-      setUsername(updatedUser.data.username);
+      const {data:updatedUser}=await getMe();
+      setUser(updatedUser);
+      setUsername(updatedUser.username);
     } catch (error) {
       console.error("Failed to upload profile picture", error);
       setMessage("Failed to upload profile picture.");
