@@ -41,7 +41,7 @@ const CommentList = ({ comments, currentUserId, postAuthorId, onDelete, onVote }
             <div className="flex justify-between items-start mb-2">
             <div className="flex items-center space-x-2">
               {author.profilePicture && (
-                <img src={`${process.env.REACT_APP_BACKEND_URL}${author.profilePicture}`} alt="Profile" className="h-5 w-5 rounded-full object-cover"/>
+                <img src={`${process.env.REACT_APP_API_URL?.replace('/api', '')}${author.profilePicture}`} alt="Profile" className="h-5 w-5 rounded-full object-cover"/>
                 )}
                 <span className="text-sm font-medium text-accent">{author.username}</span>
                 </div>
