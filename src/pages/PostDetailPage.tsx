@@ -38,7 +38,10 @@ const PostDetailPage = () => {
     }
 
     try {
-      const response = await votePost(id!, vote);
+      await votePost(id!, vote);
+
+
+      const response = await getPost(id!);
       setPost(response.data);
       setVoteError("");
     } catch (error: any) {
