@@ -55,20 +55,32 @@ const PostDetailPage = () => {
       navigate("/login");
       return;
     }
-
+  
     try {
       const response = await voteComment(commentId, vote);
       setPost(prevPost => {
         if (!prevPost) return null;
+  
+        const updatedComments = prevPost.comments.map(comment => {
+          if (typeof comment === "string") {
+            return comment;
+          }
+  
+          if (comment._id === commentId) {
+            return response.data;
+          }
+  
+          return comment;
+        });
+  
         return {
           ...prevPost,
-          comments: prevPost.comments.map(c => 
-            typeof c !== "string" && c._id === commentId ? response.data : c
-          )
+          comments: updatedComments,
         };
       });
+  
       setVoteError("");
-    } catch (error:any) {
+    } catch (error: any) {
       const msg = error?.response?.data?.message || "Failed to vote on comment";
       setVoteError(msg);
     }
