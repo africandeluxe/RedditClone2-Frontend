@@ -57,27 +57,9 @@ const PostDetailPage = () => {
     }
   
     try {
-      const response = await voteComment(commentId, vote);
-      setPost(prevPost => {
-        if (!prevPost) return null;
-  
-        const updatedComments = prevPost.comments.map(comment => {
-          if (typeof comment === "string") {
-            return comment;
-          }
-  
-          if (comment._id === commentId) {
-            return response.data;
-          }
-  
-          return comment;
-        });
-  
-        return {
-          ...prevPost,
-          comments: updatedComments,
-        };
-      });
+      await voteComment(commentId, vote);
+      const response = await getPost(id!);
+      setPost(response.data);
   
       setVoteError("");
     } catch (error: any) {
