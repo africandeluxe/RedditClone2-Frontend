@@ -58,9 +58,9 @@ const PostDetailPage = () => {
   
     try {
       await voteComment(commentId, vote);
+  
       const response = await getPost(id!);
       setPost(response.data);
-  
       setVoteError("");
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Failed to vote on comment";
